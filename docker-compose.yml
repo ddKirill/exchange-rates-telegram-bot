@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:14.1
+    environment:
+      POSTGRES_DB: "bot_dev_db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1234"
+    ports:
+      - "5432:5432"
