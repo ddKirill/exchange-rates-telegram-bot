@@ -1,11 +1,10 @@
 package com.ddkirill.ratesbot.service;
 
-import org.springframework.stereotype.Component;
+import com.ddkirill.ratesbot.dto.RatesResponse;
 
-@Component
-public class OpenExchangeClient {
+import java.util.List;
 
+public interface OpenExchangeClient {
 
-
-
+    RatesResponse requestFor3Currency(String baseCurrency, List<String> compareCurrency);
 }
