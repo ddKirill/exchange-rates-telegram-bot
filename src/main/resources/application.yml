@@ -6,3 +6,8 @@ spring:
     password: "1234"
   liquibase:
     change-log: db/changelog/db.changelog-master.yml
+
+open-exchange-rates:
+  api:
+    url: "https://openexchangerates.org/api/latest.json"
+    app-id: ${APP_ID}
