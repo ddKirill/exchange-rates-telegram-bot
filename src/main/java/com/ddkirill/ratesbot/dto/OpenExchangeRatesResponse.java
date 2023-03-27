@@ -3,7 +3,7 @@ package com.ddkirill.ratesbot.dto;
 import java.util.Map;
 
 
-public class RatesResponse {
+public class OpenExchangeRatesResponse {
 
     private String base;
     private Map<String,Double> rates;

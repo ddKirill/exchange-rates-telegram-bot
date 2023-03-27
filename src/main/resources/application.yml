@@ -11,3 +11,8 @@ open-exchange-rates:
   api:
     url: "https://openexchangerates.org/api/latest.json"
     app-id: ${APP_ID}
+
+telegram:
+  bot:
+    token: ${TOKEN}
+    username: ${USER_NAME}

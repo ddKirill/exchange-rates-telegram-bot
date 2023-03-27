@@ -1,6 +1,6 @@
 package com.ddkirill.ratesbot.service;
 
-import com.ddkirill.ratesbot.dto.RatesResponse;
+import com.ddkirill.ratesbot.dto.OpenExchangeRatesResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,9 +16,9 @@ public class OpenExchangeClientImlp implements OpenExchangeClient {
     }
 
     @Override
-    public RatesResponse requestFor3Currency(String baseCurrency, List<String> compareCurrency) {
+    public OpenExchangeRatesResponse requestFor3Currency(String baseCurrency, List<String> compareCurrency) {
         String uri = urlBuilder.buildOpenExchangeURL(baseCurrency, compareCurrency);
         RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForObject(uri, RatesResponse.class);
+        return restTemplate.getForObject(uri, OpenExchangeRatesResponse.class);
     }
 }
