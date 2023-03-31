@@ -11,25 +11,29 @@ import java.util.List;
 public class Users {
 
     @Id
-    private Integer telegramId;
+    private Long telegramId;
     private Time notificationTime;
     private String baseCurrency;
     private List<Currency> currencyList;
     @Version
     private Integer version;
 
-    public Users(Integer telegramId, Time notificationTime, String baseCurrency, List<Currency> currencyList) {
+    public Users(Long telegramId, Time notificationTime, String baseCurrency, List<Currency> currencyList) {
         this.telegramId = telegramId;
         this.notificationTime = notificationTime;
         this.baseCurrency = baseCurrency;
         this.currencyList = currencyList;
     }
 
-    public Integer getTelegramId() {
+    public Users() {
+
+    }
+
+    public Long getTelegramId() {
         return telegramId;
     }
 
-    public void setTelegramId(Integer telegramId) {
+    public void setTelegramId(Long telegramId) {
         this.telegramId = telegramId;
     }
 
