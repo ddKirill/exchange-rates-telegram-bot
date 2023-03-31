@@ -9,7 +9,8 @@ public class UserService {
 
     private UsersRepository usersRepository;
 
-    public UserService() {
+    public UserService(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
     }
 
     public void registerUser(Long telegramId) {

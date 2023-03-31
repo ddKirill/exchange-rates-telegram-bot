@@ -1,16 +1,16 @@
 spring:
   datasource:
-    driver-class-Name: org.driver.Postgres
+    driver-class-Name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/bot_dev_db
     username: "postgres"
     password: "1234"
   liquibase:
-    change-log: db/changelog/db.changelog-master.yml
+    change-log: db/changelog/db.changelog-master.yaml
 
 open-exchange-rates:
   api:
     url: "https://openexchangerates.org/api/latest.json"
-    app-id: ${APP_ID}
+    app-id: "f093d584ee8c4332a9ba2fc2539c1ed4"
 
 telegram:
   bot:

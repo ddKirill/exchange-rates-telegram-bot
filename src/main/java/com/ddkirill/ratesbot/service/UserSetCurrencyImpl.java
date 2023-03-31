@@ -3,6 +3,7 @@ package com.ddkirill.ratesbot.service;
 import com.ddkirill.ratesbot.entity.Currency;
 import com.ddkirill.ratesbot.entity.Users;
 import com.ddkirill.ratesbot.repository.UsersRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,6 +13,7 @@ public class UserSetCurrencyImpl implements SetCurrencyForUser {
 
     private final UsersRepository usersRepository;
 
+    @Lazy
     public UserSetCurrencyImpl(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
     }

@@ -17,7 +17,7 @@ public class KeyboardSelectBaseCurrency {
 
         InlineKeyboardButton usdButton = new InlineKeyboardButton();
 
-        String currencyAlias = CurrencyAliasAndTitle.USD.getCurrencyTitle();
+        String currencyAlias = CurrencyAliasAndTitle.USD.name();
         usdButton.setText(currencyAlias);
         usdButton.setCallbackData(currencyAlias);
 

@@ -58,16 +58,17 @@ public class ExchangeRatesSmartBot {
 
                 Message message = update.getMessage();
                 Chat chat = message.getChat();
+                Long chatId = message.getChatId();
 
                 if (message.isCommand()) {
 
                     if ("/start".equals(message.getText())) {
-                        userService.registerUser(message.getChatId());
-                        sendTextMessageAndKeyboard(message.getChatId(), TextMessage.SELECT_BASE_CURRENCY.getTextMessage(),
+                        userService.registerUser(chatId);
+                        sendTextMessageAndKeyboard(chatId, TextMessage.SELECT_BASE_CURRENCY.getTextMessage(),
                                 keyboardSelectBaseCurrency.getKeyboard());
                     }
                 } else if (message.isUserMessage()) {
-                    sendTextMessage(message.getChatId(), TextMessage.NON_COMMAND.getTextMessage());
+                    sendTextMessage(chatId, TextMessage.NON_COMMAND.getTextMessage());
                 }
             }
 
