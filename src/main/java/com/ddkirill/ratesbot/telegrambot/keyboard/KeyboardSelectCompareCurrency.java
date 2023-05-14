@@ -11,26 +11,26 @@ import java.util.List;
 @Component
 public class KeyboardSelectCompareCurrency {
 
-    private String aliasUSD = CurrencyAliasAndTitle.USD.name();
-    private String aliasRUB = CurrencyAliasAndTitle.RUB.name();
-    private String aliasEUR = CurrencyAliasAndTitle.EUR.name();
-    private String aliasAED = CurrencyAliasAndTitle.AED.name();
-    private String aliasUZS = CurrencyAliasAndTitle.UZS.name();
-    private String aliasUAH = CurrencyAliasAndTitle.UAH.name();
-    private String aliasTRY = CurrencyAliasAndTitle.TRY.name();
-    private String aliasTJS = CurrencyAliasAndTitle.TJS.name();
-    private String aliasKZT = CurrencyAliasAndTitle.KZT.name();
-    private String aliasKRW = CurrencyAliasAndTitle.KRW.name();
-    private String aliasJPY = CurrencyAliasAndTitle.JPY.name();
-    private String aliasINR = CurrencyAliasAndTitle.INR.name();
-    private String aliasBTC = CurrencyAliasAndTitle.BTC.name();
-    private String aliasAZN = CurrencyAliasAndTitle.AZN.name();
-    private String aliasGEL = CurrencyAliasAndTitle.GEL.name();
-    private String aliasPLN = CurrencyAliasAndTitle.PLN.name();
-    private String aliasMXN = CurrencyAliasAndTitle.MXN.name();
-    private String aliasMNT = CurrencyAliasAndTitle.MNT.name();
-    private String aliasCOP = CurrencyAliasAndTitle.COP.name();
-    private String aliasCAD = CurrencyAliasAndTitle.CAD.name();
+    private final String aliasUSD = CurrencyAliasAndTitle.USD.name();
+    private final String aliasRUB = CurrencyAliasAndTitle.RUB.name();
+    private final String aliasEUR = CurrencyAliasAndTitle.EUR.name();
+    private final String aliasAED = CurrencyAliasAndTitle.AED.name();
+    private final String aliasUZS = CurrencyAliasAndTitle.UZS.name();
+    private final String aliasUAH = CurrencyAliasAndTitle.UAH.name();
+    private final String aliasTRY = CurrencyAliasAndTitle.TRY.name();
+    private final String aliasTJS = CurrencyAliasAndTitle.TJS.name();
+    private final String aliasKZT = CurrencyAliasAndTitle.KZT.name();
+    private final String aliasKRW = CurrencyAliasAndTitle.KRW.name();
+    private final String aliasJPY = CurrencyAliasAndTitle.JPY.name();
+    private final String aliasINR = CurrencyAliasAndTitle.INR.name();
+    private final String aliasBTC = CurrencyAliasAndTitle.BTC.name();
+    private final String aliasAZN = CurrencyAliasAndTitle.AZN.name();
+    private final String aliasGEL = CurrencyAliasAndTitle.GEL.name();
+    private final String aliasPLN = CurrencyAliasAndTitle.PLN.name();
+    private final String aliasMXN = CurrencyAliasAndTitle.MXN.name();
+    private final String aliasMNT = CurrencyAliasAndTitle.MNT.name();
+    private final String aliasCOP = CurrencyAliasAndTitle.COP.name();
+    private final String aliasCAD = CurrencyAliasAndTitle.CAD.name();
 
     public InlineKeyboardMarkup getKeyboard() {
 

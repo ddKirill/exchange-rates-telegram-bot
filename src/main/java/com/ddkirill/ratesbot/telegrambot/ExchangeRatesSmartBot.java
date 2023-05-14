@@ -1,7 +1,8 @@
 package com.ddkirill.ratesbot.telegrambot;
 
 import com.ddkirill.ratesbot.config.BotProperties;
-import com.ddkirill.ratesbot.enums.TextMessage;
+import com.ddkirill.ratesbot.enums.PathTextMessage;
+import com.ddkirill.ratesbot.service.ReadTXT;
 import com.ddkirill.ratesbot.service.SetCurrencyForUser;
 import com.ddkirill.ratesbot.service.UserService;
 import com.ddkirill.ratesbot.telegrambot.keyboard.KeyboardSelectBaseCurrency;
@@ -25,16 +26,18 @@ public class ExchangeRatesSmartBot {
     private final KeyboardSelectCompareCurrency keyboardSelectCompareCurrency;
     private UserService userService;
     private SetCurrencyForUser setCurrencyForUser;
+    private ReadTXT readTXT;
 
 
     public ExchangeRatesSmartBot(BotProperties botProperties, KeyboardSelectBaseCurrency keyboardSelectBaseCurrency,
                                  KeyboardSelectCompareCurrency keyboardSelectCompareCurrency, UserService userService,
-                                 SetCurrencyForUser setCurrencyForUser) throws TelegramApiException {
+                                 SetCurrencyForUser setCurrencyForUser, ReadTXT readTXT) throws TelegramApiException {
         this.botProperties = botProperties;
         this.keyboardSelectBaseCurrency = keyboardSelectBaseCurrency;
         this.keyboardSelectCompareCurrency = keyboardSelectCompareCurrency;
         this.userService = userService;
         this.setCurrencyForUser = setCurrencyForUser;
+        this.readTXT = readTXT;
         this.telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         this.telegramLongPollingBot = new MyBot(botProperties.bot().token());
         this.telegramBotsApi.registerBot(telegramLongPollingBot);
@@ -59,16 +62,18 @@ public class ExchangeRatesSmartBot {
                 Message message = update.getMessage();
                 Chat chat = message.getChat();
                 Long chatId = message.getChatId();
+                String startMessage = PathTextMessage.SELECT_BASE_CURRENCY.getPath();
+                String nonCommandMessage = PathTextMessage.NON_COMMAND.getPath();
 
                 if (message.isCommand()) {
 
                     if ("/start".equals(message.getText())) {
                         userService.registerUser(chatId);
-                        sendTextMessageAndKeyboard(chatId, TextMessage.SELECT_BASE_CURRENCY.getTextMessage(),
+                        sendTextMessageAndKeyboard(chatId, readTXT.readTextFile(startMessage),
                                 keyboardSelectBaseCurrency.getKeyboard());
                     }
                 } else if (message.isUserMessage()) {
-                    sendTextMessage(chatId, TextMessage.NON_COMMAND.getTextMessage());
+                    sendTextMessage(chatId, readTXT.readTextFile(nonCommandMessage));
                 }
             }
 
@@ -76,26 +81,26 @@ public class ExchangeRatesSmartBot {
                 CallbackQuery callbackQuery = update.getCallbackQuery();
                 String callBackData = callbackQuery.getData();
                 Long chatId = callbackQuery.getMessage().getChatId();
+                String selectCompareCurrency = PathTextMessage.SELECT_COMPARE_CURRENCY.getPath();
 
                 if (callBackData.equals("USD")) {
                     setCurrencyForUser.setBaseCurrency(chatId, callBackData);
-                    sendTextMessageAndKeyboard(chatId, TextMessage.SELECT_BASE_CURRENCY.getTextMessage(),
+                    sendTextMessageAndKeyboard(chatId, readTXT.readTextFile(selectCompareCurrency),
                             keyboardSelectCompareCurrency.getKeyboard());
-
                 }
+
+
 
             }
         }
 
-
-
         private void sendTextMessage(Long chatId, String text) {
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.setChatId(chatId);
-            sendMessage.setText(text);
-
             try {
-                execute(sendMessage);
+                execute(SendMessage.builder()
+                        .chatId(chatId)
+                        .text(text)
+                        .build()
+                );
             } catch (TelegramApiException e) {
                 throw new RuntimeException(e);
             }

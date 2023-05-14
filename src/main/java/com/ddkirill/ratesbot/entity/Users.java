@@ -14,15 +14,15 @@ public class Users {
     private Long telegramId;
     private Time notificationTime;
     private String baseCurrency;
-    private List<Currency> currencyList;
+    private List<String> comparedCurrency;
     @Version
     private Integer version;
 
-    public Users(Long telegramId, Time notificationTime, String baseCurrency, List<Currency> currencyList) {
+    public Users(Long telegramId, Time notificationTime, String baseCurrency, List<String> comparedCurrency) {
         this.telegramId = telegramId;
         this.notificationTime = notificationTime;
         this.baseCurrency = baseCurrency;
-        this.currencyList = currencyList;
+        this.comparedCurrency = comparedCurrency;
     }
 
     public Users() {
@@ -53,12 +53,12 @@ public class Users {
         this.baseCurrency = baseCurrency;
     }
 
-    public List<Currency> getCurrencyList() {
-        return currencyList;
+    public List<String> getComparedCurrency() {
+        return comparedCurrency;
     }
 
-    public void setCurrencyList(List<Currency> currencyList) {
-        this.currencyList = currencyList;
+    public void setComparedCurrency(List<String> comparedCurrency) {
+        this.comparedCurrency = comparedCurrency;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class Users {
                 "telegramId=" + telegramId +
                 ", notificationTime=" + notificationTime +
                 ", baseCurrency='" + baseCurrency + '\'' +
-                ", currencyList=" + currencyList +
+                ", currencyList=" + comparedCurrency +
                 '}';
     }
 }

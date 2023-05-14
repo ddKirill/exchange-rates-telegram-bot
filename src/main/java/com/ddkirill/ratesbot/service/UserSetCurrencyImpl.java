@@ -1,6 +1,5 @@
 package com.ddkirill.ratesbot.service;
 
-import com.ddkirill.ratesbot.entity.Currency;
 import com.ddkirill.ratesbot.entity.Users;
 import com.ddkirill.ratesbot.repository.UsersRepository;
 import org.springframework.context.annotation.Lazy;
@@ -19,16 +18,14 @@ public class UserSetCurrencyImpl implements SetCurrencyForUser {
     }
 
     @Override
-    public void setBaseCurrency(Long telegramId, String baseCurrency) {
+    public void setBaseCurrency(Long userId, String baseCurrency) {
 
-        Optional<Users> optionalUsers = usersRepository.findById(telegramId);
+        Optional<Users> optionalUsers = usersRepository.findById(userId);
         if (optionalUsers.isPresent()) {
             Users user = optionalUsers.get();
             user.setBaseCurrency(baseCurrency);
             usersRepository.save(user);
         }
-
-
 
     }
 
@@ -37,7 +34,7 @@ public class UserSetCurrencyImpl implements SetCurrencyForUser {
         Optional<Users> optionalUser = usersRepository.findById(telegramId);
         if (optionalUser.isPresent()) {
             Users user = optionalUser.get();
-            user.getCurrencyList().add(new Currency(aliasCurrency));
+            user.getComparedCurrency().add(aliasCurrency);
             usersRepository.save(user);
         }
     }
