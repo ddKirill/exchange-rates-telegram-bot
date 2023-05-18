@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Version;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
 @Table("users")
@@ -14,7 +15,7 @@ public class Users {
     private Long telegramId;
     private Time notificationTime;
     private String baseCurrency;
-    private List<String> comparedCurrency;
+    private List<String> comparedCurrency = new ArrayList<>(3);
     @Version
     private Integer version;
 

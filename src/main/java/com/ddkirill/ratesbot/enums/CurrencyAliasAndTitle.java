@@ -34,4 +34,13 @@ public enum CurrencyAliasAndTitle {
     public String getCurrencyTitle() {
         return currencyTitle;
     }
+
+    public static boolean contains(String alias) {
+        for (CurrencyAliasAndTitle title : values()) {
+            if (title.name().equals(alias)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
