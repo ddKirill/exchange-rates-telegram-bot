@@ -17,26 +17,45 @@ public class ReplyKeyboardMaker {
         KeyboardRow row2 = new KeyboardRow();
         KeyboardRow row3 = new KeyboardRow();
         KeyboardRow row4 = new KeyboardRow();
-
-        row1.add(new KeyboardButton(CurrencyAliasAndTitle.MXN.name()));
-        row1.add(new KeyboardButton(CurrencyAliasAndTitle.TRY.name()));
-        row2.add(new KeyboardButton(CurrencyAliasAndTitle.GEL.name()));
-        row2.add(new KeyboardButton(CurrencyAliasAndTitle.JPY.name()));
-        row3.add(new KeyboardButton(CurrencyAliasAndTitle.BTC.name()));
-        row3.add(new KeyboardButton(CurrencyAliasAndTitle.RUB.name()));
-        row4.add(new KeyboardButton(CurrencyAliasAndTitle.KRW.name()));
-        row4.add(new KeyboardButton(CurrencyAliasAndTitle.UZS.name()));
+        KeyboardRow row5 = new KeyboardRow();
+        KeyboardRow row6 = new KeyboardRow();
+        KeyboardRow row7 = new KeyboardRow();
         List<KeyboardRow> keyboard = new ArrayList<>();
+        final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+
+        row1.add(new KeyboardButton(CurrencyAliasAndTitle.RUB.name()));
+        row1.add(new KeyboardButton(CurrencyAliasAndTitle.USD.name()));
+        row1.add(new KeyboardButton(CurrencyAliasAndTitle.EUR.name()));
+        row2.add(new KeyboardButton(CurrencyAliasAndTitle.AED.name()));
+        row2.add(new KeyboardButton(CurrencyAliasAndTitle.UZS.name()));
+        row2.add(new KeyboardButton(CurrencyAliasAndTitle.UAH.name()));
+        row3.add(new KeyboardButton(CurrencyAliasAndTitle.TRY.name()));
+        row3.add(new KeyboardButton(CurrencyAliasAndTitle.TJS.name()));
+        row3.add(new KeyboardButton(CurrencyAliasAndTitle.KZT.name()));
+        row4.add(new KeyboardButton(CurrencyAliasAndTitle.KRW.name()));
+        row4.add(new KeyboardButton(CurrencyAliasAndTitle.JPY.name()));
+        row4.add(new KeyboardButton(CurrencyAliasAndTitle.INR.name()));
+        row5.add(new KeyboardButton(CurrencyAliasAndTitle.BTC.name()));
+        row5.add(new KeyboardButton(CurrencyAliasAndTitle.AZN.name()));
+        row5.add(new KeyboardButton(CurrencyAliasAndTitle.GEL.name()));
+        row6.add(new KeyboardButton(CurrencyAliasAndTitle.PLN.name()));
+        row6.add(new KeyboardButton(CurrencyAliasAndTitle.MXN.name()));
+        row6.add(new KeyboardButton(CurrencyAliasAndTitle.MNT.name()));
+        row7.add(new KeyboardButton(CurrencyAliasAndTitle.COP.name()));
+        row7.add(new KeyboardButton(CurrencyAliasAndTitle.CAD.name()));
+
         keyboard.add(row1);
         keyboard.add(row2);
         keyboard.add(row3);
         keyboard.add(row4);
+        keyboard.add(row5);
+        keyboard.add(row6);
+        keyboard.add(row7);
 
-        final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setKeyboard(keyboard);
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(false);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
 
         return replyKeyboardMarkup;
     }

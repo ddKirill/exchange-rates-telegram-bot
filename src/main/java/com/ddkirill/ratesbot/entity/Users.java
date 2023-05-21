@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.sql.Array;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public class Users {
     private Long telegramId;
     private Time notificationTime;
     private String baseCurrency;
-    private List<String> comparedCurrency = new ArrayList<>(3);
+    private List<String> comparedCurrency = new ArrayList<>();
     @Version
     private Integer version;
 
@@ -27,7 +28,6 @@ public class Users {
     }
 
     public Users() {
-
     }
 
     public Long getTelegramId() {
@@ -58,8 +58,8 @@ public class Users {
         return comparedCurrency;
     }
 
-    public void setComparedCurrency(List<String> comparedCurrency) {
-        this.comparedCurrency = comparedCurrency;
+    public void setComparedCurrency(String currencyAlias) {
+        comparedCurrency.add(currencyAlias);
     }
 
     @Override

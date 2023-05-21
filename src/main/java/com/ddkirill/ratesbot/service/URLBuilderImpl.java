@@ -1,11 +1,11 @@
 package com.ddkirill.ratesbot.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
+@Service
 public class URLBuilderImpl implements URLBuilder {
 
     @Value("${open-exchange-rates.api.url}")

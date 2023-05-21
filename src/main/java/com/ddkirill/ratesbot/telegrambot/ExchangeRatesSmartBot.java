@@ -3,15 +3,14 @@ package com.ddkirill.ratesbot.telegrambot;
 import com.ddkirill.ratesbot.config.BotProperties;
 import com.ddkirill.ratesbot.enums.CurrencyAliasAndTitle;
 import com.ddkirill.ratesbot.enums.PathTextMessage;
-import com.ddkirill.ratesbot.service.ReadTXT;
-import com.ddkirill.ratesbot.service.SetCurrencyForUser;
-import com.ddkirill.ratesbot.service.UserService;
+import com.ddkirill.ratesbot.service.*;
 import com.ddkirill.ratesbot.telegrambot.keyboard.KeyboardSelectBaseCurrency;
 import com.ddkirill.ratesbot.telegrambot.keyboard.KeyboardSelectCompareCurrency;
 import com.ddkirill.ratesbot.telegrambot.keyboard.ReplyKeyboardMaker;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.*;
@@ -28,21 +27,22 @@ public class ExchangeRatesSmartBot {
     private final TelegramBotsApi telegramBotsApi;
     private final KeyboardSelectBaseCurrency keyboardSelectBaseCurrency;
     private final KeyboardSelectCompareCurrency keyboardSelectCompareCurrency;
-
     private final ReplyKeyboardMaker replyKeyboardMaker;
     private UserService userService;
+    private CheckArray checkArray;
     private SetCurrencyForUser setCurrencyForUser;
     private ReadTXT readTXT;
 
 
     public ExchangeRatesSmartBot(BotProperties botProperties, KeyboardSelectBaseCurrency keyboardSelectBaseCurrency,
                                  KeyboardSelectCompareCurrency keyboardSelectCompareCurrency, ReplyKeyboardMaker replyKeyboardMaker, UserService userService,
-                                 SetCurrencyForUser setCurrencyForUser, ReadTXT readTXT) throws TelegramApiException {
+                                 CheckArray checkArray, SetCurrencyForUser setCurrencyForUser, ReadTXT readTXT) throws TelegramApiException {
         this.botProperties = botProperties;
         this.keyboardSelectBaseCurrency = keyboardSelectBaseCurrency;
         this.keyboardSelectCompareCurrency = keyboardSelectCompareCurrency;
         this.replyKeyboardMaker = replyKeyboardMaker;
         this.userService = userService;
+        this.checkArray = checkArray;
         this.setCurrencyForUser = setCurrencyForUser;
         this.readTXT = readTXT;
         this.telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
@@ -72,6 +72,18 @@ public class ExchangeRatesSmartBot {
                 String startMessage = PathTextMessage.SELECT_BASE_CURRENCY.getPath();
                 String nonCommandMessage = PathTextMessage.NON_COMMAND.getPath();
 
+                if (message.hasText()) {
+
+                    if (CurrencyAliasAndTitle.contains(message.getText())) {
+                        setCurrencyForUser.setCompareCurrency(chatId,message.getText());
+                        sendTextAndReplyKeyboardMarkup(chatId, "Выбери валюту", replyKeyboardMaker.getKeyboard());
+                    }
+
+                    if (CurrencyAliasAndTitle.contains(message.getText()) && checkArray.checkArrayIfFull(chatId)) {
+                        sendTextMessage(chatId, "Отлично, валюты добавлены! Теперь пора выбрать время для уведомлений");
+                    }
+                }
+
                 if (message.isCommand()) {
 
                     if ("/start".equals(message.getText())) {
@@ -79,7 +91,13 @@ public class ExchangeRatesSmartBot {
                         sendTextMessageAndKeyboard(chatId, readTXT.readTextFile(startMessage),
                                 keyboardSelectBaseCurrency.getKeyboard());
                     }
-                } else if (message.isUserMessage()) {
+
+                    if ("/clear".equals(message.getText())) {
+                        userService.deleteCompareCurrency(chatId);
+                        sendTextMessage(chatId, "Валюты для сравнения очищены");
+                    }
+
+                } else if (message.isUserMessage() && !CurrencyAliasAndTitle.contains(message.getText())) {
                     sendTextMessage(chatId, readTXT.readTextFile(nonCommandMessage));
                 }
             }
@@ -91,21 +109,12 @@ public class ExchangeRatesSmartBot {
                 Long chatId = callbackQuery.getMessage().getChatId();
                 Integer messageId = callbackQuery.getMessage().getMessageId();
                 String selectCompareCurrency = PathTextMessage.SELECT_COMPARE_CURRENCY.getPath();
-                String addedFirstCompareCurrency = PathTextMessage.ADDED_FIRST_COMPARE_CURRENCY.getPath();
 
 
                 if (callBackData.equals("USD")) {
                     setCurrencyForUser.setBaseCurrency(chatId, callBackData);
-                    sendTextMessageAndKeyboard(chatId, readTXT.readTextFile(selectCompareCurrency),
-                            keyboardSelectCompareCurrency.getKeyboard());
+                    sendTextAndReplyKeyboardMarkup(chatId, readTXT.readTextFile(selectCompareCurrency), replyKeyboardMaker.getKeyboard());
                 }
-
-                else if (CurrencyAliasAndTitle.contains(callBackData)) {
-                    int countAlias = setCurrencyForUser.setFirstCompareCurrency(chatId, callBackData);
-                    sendTextAndReplyKeyboardMarkup(chatId, "bla bla", replyKeyboardMaker.getKeyboard());
-                }
-
-
 
             }
         }
@@ -115,6 +124,7 @@ public class ExchangeRatesSmartBot {
                 execute(SendMessage.builder()
                         .chatId(chatId)
                         .text(text)
+                        .parseMode(ParseMode.HTML)
                         .build()
                 );
             } catch (TelegramApiException e) {
@@ -128,6 +138,7 @@ public class ExchangeRatesSmartBot {
                         .chatId(chatId)
                         .text(text)
                         .replyMarkup(replyKeyboard)
+                        .parseMode(ParseMode.HTML)
                         .build()
                 );
             } catch (TelegramApiException e) {
@@ -142,6 +153,7 @@ public class ExchangeRatesSmartBot {
                         .messageId(messageId)
                         .text(textNewMessage)
                         .replyMarkup(replyMarkup)
+                        .parseMode(ParseMode.HTML)
                         .build()
                 )
                 ;
@@ -156,6 +168,7 @@ public class ExchangeRatesSmartBot {
                         .text(textMessage)
                         .chatId(chatId)
                         .replyMarkup(replyKeyboardMarkup)
+                        .parseMode(ParseMode.HTML)
                         .build()
                 );
             } catch (TelegramApiException e) {
