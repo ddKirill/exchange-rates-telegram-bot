@@ -2,12 +2,14 @@ package com.ddkirill.ratesbot.service;
 
 import com.ddkirill.ratesbot.entity.Users;
 import com.ddkirill.ratesbot.repository.UsersRepository;
+import com.ddkirill.ratesbot.service.interfaces.UserInfo;
+import com.ddkirill.ratesbot.service.interfaces.UserTimer;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.sql.Time;
 
 @Service
-public class UserService {
+public class UserService implements UserTimer {
 
     private final UsersRepository usersRepository;
     private final UserInfo userInfo;
@@ -26,10 +28,11 @@ public class UserService {
         }
     }
 
-    public void deleteCompareCurrency(Long chatId) {
-        Users user = userInfo.getUser(chatId);
-        List<String> comparedCurrency = user.getComparedCurrency();
-        comparedCurrency.clear();
+    @Override
+    public void setTime(Long userId, Time time) {
+        Users user = userInfo.getUser(userId);
+        user.setNotificationTime(time);
         usersRepository.save(user);
     }
+
 }

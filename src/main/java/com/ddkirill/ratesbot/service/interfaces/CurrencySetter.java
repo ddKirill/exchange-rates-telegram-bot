@@ -1,6 +1,6 @@
-package com.ddkirill.ratesbot.service;
+package com.ddkirill.ratesbot.service.interfaces;
 
-public interface SetCurrencyForUser {
+public interface CurrencySetter {
 
 
     void setBaseCurrency(Long telegramId, String baseCurrency);

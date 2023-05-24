@@ -1,5 +1,6 @@
 package com.ddkirill.ratesbot.service;
 
+import com.ddkirill.ratesbot.service.interfaces.URLBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

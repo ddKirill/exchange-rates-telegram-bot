@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ReplyKeyboardMaker {
+public class CompareCurrencyKeyboard {
 
     public ReplyKeyboardMarkup getKeyboard() {
         KeyboardRow row1 = new KeyboardRow();
@@ -55,7 +55,7 @@ public class ReplyKeyboardMaker {
         replyKeyboardMarkup.setKeyboard(keyboard);
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
 
         return replyKeyboardMarkup;
     }

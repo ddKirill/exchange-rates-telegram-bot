@@ -1,12 +1,14 @@
 package com.ddkirill.ratesbot.telegrambot;
 
 import com.ddkirill.ratesbot.config.BotProperties;
+import com.ddkirill.ratesbot.dto.OpenExchangeRatesResponse;
 import com.ddkirill.ratesbot.enums.CurrencyAliasAndTitle;
+import com.ddkirill.ratesbot.enums.HoursEnum;
 import com.ddkirill.ratesbot.enums.PathTextMessage;
 import com.ddkirill.ratesbot.service.*;
-import com.ddkirill.ratesbot.telegrambot.keyboard.KeyboardSelectBaseCurrency;
-import com.ddkirill.ratesbot.telegrambot.keyboard.KeyboardSelectCompareCurrency;
-import com.ddkirill.ratesbot.telegrambot.keyboard.ReplyKeyboardMaker;
+import com.ddkirill.ratesbot.service.interfaces.CheckArray;
+import com.ddkirill.ratesbot.service.interfaces.CurrencySetter;
+import com.ddkirill.ratesbot.telegrambot.keyboard.*;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -27,24 +29,33 @@ public class ExchangeRatesSmartBot {
     private final TelegramBotsApi telegramBotsApi;
     private final KeyboardSelectBaseCurrency keyboardSelectBaseCurrency;
     private final KeyboardSelectCompareCurrency keyboardSelectCompareCurrency;
-    private final ReplyKeyboardMaker replyKeyboardMaker;
+    private final CompareCurrencyKeyboard compareCurrencyKeyboard;
+    private UserCurrencyManager userCurrencyManager;
+    private HoursKeyboard hoursKeyboard;
     private UserService userService;
     private CheckArray checkArray;
-    private SetCurrencyForUser setCurrencyForUser;
+    private CurrencySetter currencySetter;
     private ReadTXT readTXT;
+    private RequestManager requestManager;
+    private ResponseBuilderImpl responseBuilder;
 
 
     public ExchangeRatesSmartBot(BotProperties botProperties, KeyboardSelectBaseCurrency keyboardSelectBaseCurrency,
-                                 KeyboardSelectCompareCurrency keyboardSelectCompareCurrency, ReplyKeyboardMaker replyKeyboardMaker, UserService userService,
-                                 CheckArray checkArray, SetCurrencyForUser setCurrencyForUser, ReadTXT readTXT) throws TelegramApiException {
+                                 KeyboardSelectCompareCurrency keyboardSelectCompareCurrency, CompareCurrencyKeyboard compareCurrencyKeyboard,
+                                 UserCurrencyManager userCurrencyManager, HoursKeyboard hoursKeyboard, UserService userService, CheckArray checkArray, CurrencySetter currencySetter,
+                                 ReadTXT readTXT, RequestManager requestManager, ResponseBuilderImpl responseBuilder) throws TelegramApiException {
         this.botProperties = botProperties;
         this.keyboardSelectBaseCurrency = keyboardSelectBaseCurrency;
         this.keyboardSelectCompareCurrency = keyboardSelectCompareCurrency;
-        this.replyKeyboardMaker = replyKeyboardMaker;
+        this.compareCurrencyKeyboard = compareCurrencyKeyboard;
+        this.userCurrencyManager = userCurrencyManager;
+        this.hoursKeyboard = hoursKeyboard;
         this.userService = userService;
         this.checkArray = checkArray;
-        this.setCurrencyForUser = setCurrencyForUser;
+        this.currencySetter = currencySetter;
         this.readTXT = readTXT;
+        this.requestManager = requestManager;
+        this.responseBuilder = responseBuilder;
         this.telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         this.telegramLongPollingBot = new MyBot(botProperties.bot().token());
         this.telegramBotsApi.registerBot(telegramLongPollingBot);
@@ -71,16 +82,22 @@ public class ExchangeRatesSmartBot {
                 Long chatId = message.getChatId();
                 String startMessage = PathTextMessage.SELECT_BASE_CURRENCY.getPath();
                 String nonCommandMessage = PathTextMessage.NON_COMMAND.getPath();
+                String selectTimeText = PathTextMessage.SELECT_NOTIFICATION_TIME.getPath();
+                String menuText = PathTextMessage.MAIN_MENU.getPath();
 
                 if (message.hasText()) {
 
                     if (CurrencyAliasAndTitle.contains(message.getText())) {
-                        setCurrencyForUser.setCompareCurrency(chatId,message.getText());
-                        sendTextAndReplyKeyboardMarkup(chatId, "Выбери валюту", replyKeyboardMaker.getKeyboard());
+                        currencySetter.setCompareCurrency(chatId,message.getText());
+                        sendTextAndReplyKeyboardMarkup(chatId, "Выбери валюту ->", compareCurrencyKeyboard.getKeyboard());
                     }
 
                     if (CurrencyAliasAndTitle.contains(message.getText()) && checkArray.checkArrayIfFull(chatId)) {
-                        sendTextMessage(chatId, "Отлично, валюты добавлены! Теперь пора выбрать время для уведомлений");
+                        sendTextAndReplyKeyboardMarkup(chatId, new ReadTXT().readTextFile(selectTimeText), hoursKeyboard.getKeyboard());
+                    }
+
+                    if (HoursEnum.contains(message.getText())) {
+
                     }
                 }
 
@@ -93,8 +110,18 @@ public class ExchangeRatesSmartBot {
                     }
 
                     if ("/clear".equals(message.getText())) {
-                        userService.deleteCompareCurrency(chatId);
+                        userCurrencyManager.deleteCompareCurrency(chatId);
                         sendTextMessage(chatId, "Валюты для сравнения очищены");
+                    }
+
+                    if ("/menu".equals(message.getText())) {
+                        sendTextMessage(chatId, readTXT.readTextFile(menuText));
+                    }
+
+                    if ("/myRates".equals(message.getText())) {
+                        OpenExchangeRatesResponse userRates = requestManager.getUserRates(chatId);
+                        String response = responseBuilder.build(userRates);
+                        sendTextMessage(chatId, response);
                     }
 
                 } else if (message.isUserMessage() && !CurrencyAliasAndTitle.contains(message.getText())) {
@@ -112,8 +139,8 @@ public class ExchangeRatesSmartBot {
 
 
                 if (callBackData.equals("USD")) {
-                    setCurrencyForUser.setBaseCurrency(chatId, callBackData);
-                    sendTextAndReplyKeyboardMarkup(chatId, readTXT.readTextFile(selectCompareCurrency), replyKeyboardMaker.getKeyboard());
+                    currencySetter.setBaseCurrency(chatId, callBackData);
+                    sendTextAndReplyKeyboardMarkup(chatId, readTXT.readTextFile(selectCompareCurrency), compareCurrencyKeyboard.getKeyboard());
                 }
 
             }

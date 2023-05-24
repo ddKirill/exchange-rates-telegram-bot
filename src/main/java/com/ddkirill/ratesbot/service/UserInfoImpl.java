@@ -2,6 +2,8 @@ package com.ddkirill.ratesbot.service;
 
 import com.ddkirill.ratesbot.entity.Users;
 import com.ddkirill.ratesbot.repository.UsersRepository;
+import com.ddkirill.ratesbot.service.interfaces.CheckArray;
+import com.ddkirill.ratesbot.service.interfaces.UserInfo;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

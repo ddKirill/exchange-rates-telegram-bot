@@ -23,4 +23,12 @@ public class OpenExchangeRatesResponse {
     public void setRates(Map<String, Double> rates) {
         this.rates = rates;
     }
+
+    @Override
+    public String toString() {
+        return "OpenExchangeRatesResponse{" +
+                "base='" + base + '\'' +
+                ", rates=" + rates +
+                '}';
+    }
 }

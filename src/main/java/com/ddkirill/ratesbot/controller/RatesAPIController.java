@@ -1,7 +1,7 @@
 package com.ddkirill.ratesbot.controller;
 
 import com.ddkirill.ratesbot.dto.OpenExchangeRatesResponse;
-import com.ddkirill.ratesbot.service.OpenExchangeClient;
+import com.ddkirill.ratesbot.service.interfaces.OpenExchangeClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

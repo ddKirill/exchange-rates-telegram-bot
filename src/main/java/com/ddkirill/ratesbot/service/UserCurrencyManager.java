@@ -2,21 +2,31 @@ package com.ddkirill.ratesbot.service;
 
 import com.ddkirill.ratesbot.entity.Users;
 import com.ddkirill.ratesbot.repository.UsersRepository;
+import com.ddkirill.ratesbot.service.interfaces.CurrencyGetter;
+import com.ddkirill.ratesbot.service.interfaces.CurrencySetter;
+import com.ddkirill.ratesbot.service.interfaces.UserInfo;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserSetCurrencyImpl implements SetCurrencyForUser {
+public class UserCurrencyManager implements CurrencySetter, CurrencyGetter {
 
     private final UsersRepository usersRepository;
-    private UserInfo userInfo;
+    private final UserInfo userInfo;
 
     @Lazy
-    public UserSetCurrencyImpl(UsersRepository usersRepository, UserInfo userInfo) {
+    public UserCurrencyManager(UsersRepository usersRepository, UserInfo userInfo) {
         this.usersRepository = usersRepository;
         this.userInfo = userInfo;
+    }
+
+    public void deleteCompareCurrency(Long chatId) {
+        Users user = userInfo.getUser(chatId);
+        List<String> comparedCurrency = user.getComparedCurrency();
+        comparedCurrency.clear();
+        usersRepository.save(user);
     }
 
     @Override
@@ -42,7 +52,19 @@ public class UserSetCurrencyImpl implements SetCurrencyForUser {
                 user.setComparedCurrency(aliasCurrency);
             }
             usersRepository.save(user);
-
     }
 
+    @Override
+    public String getBaseCurrency(Long chatId) {
+        Users user = userInfo.getUser(chatId);
+        String baseCurrency = user.getBaseCurrency();
+        return baseCurrency;
+    }
+
+    @Override
+    public List<String> getCompareCurrency(Long chatId) {
+        Users user = userInfo.getUser(chatId);
+        List<String> comparedCurrency = user.getComparedCurrency();
+        return comparedCurrency;
+    }
 }

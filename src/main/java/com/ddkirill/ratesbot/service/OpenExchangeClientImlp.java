@@ -1,6 +1,8 @@
 package com.ddkirill.ratesbot.service;
 
 import com.ddkirill.ratesbot.dto.OpenExchangeRatesResponse;
+import com.ddkirill.ratesbot.service.interfaces.OpenExchangeClient;
+import com.ddkirill.ratesbot.service.interfaces.URLBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 

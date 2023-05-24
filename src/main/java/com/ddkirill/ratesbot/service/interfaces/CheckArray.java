@@ -1,4 +1,4 @@
-package com.ddkirill.ratesbot.service;
+package com.ddkirill.ratesbot.service.interfaces;
 
 public interface CheckArray {
 
