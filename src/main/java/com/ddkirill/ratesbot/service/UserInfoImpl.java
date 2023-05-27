@@ -6,6 +6,7 @@ import com.ddkirill.ratesbot.service.interfaces.CheckArray;
 import com.ddkirill.ratesbot.service.interfaces.UserInfo;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,16 @@ public class UserInfoImpl implements UserInfo, CheckArray {
         if (optionalUsers.isPresent()) {
             return true;
         } else return false;
+    }
+
+    @Override
+    public List<Users> getAllUsers() {
+        Iterable<Users> allUsersIterable = usersRepository.findAll();
+        List<Users> usersList = new ArrayList<>();
+        for (Users user : allUsersIterable) {
+            usersList.add(user);
+        }
+        return usersList;
     }
 
     @Override

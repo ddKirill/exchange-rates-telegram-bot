@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class ResponseBuilderImpl {
+public class ResponseBuilder {
 
 
     public String build(OpenExchangeRatesResponse openExchangeRatesResponse) {

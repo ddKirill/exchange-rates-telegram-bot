@@ -29,6 +29,12 @@ public class UserCurrencyManager implements CurrencySetter, CurrencyGetter {
         usersRepository.save(user);
     }
 
+    public void deleteBaseCurrency(Long chatId) {
+        Users user = userInfo.getUser(chatId);
+        user.setBaseCurrency(null);
+        usersRepository.save(user);
+    }
+
     @Override
     public void setBaseCurrency(Long userId, String baseCurrency) {
 
