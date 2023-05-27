@@ -12,32 +12,27 @@ import com.ddkirill.ratesbot.service.interfaces.TimeChecker;
 import com.ddkirill.ratesbot.telegrambot.keyboard.CompareCurrencyKeyboard;
 import com.ddkirill.ratesbot.telegrambot.keyboard.HoursKeyboard;
 import com.ddkirill.ratesbot.telegrambot.keyboard.KeyboardSelectBaseCurrency;
-import com.ddkirill.ratesbot.telegrambot.keyboard.KeyboardSelectCompareCurrency;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+
+import java.sql.Time;
+import java.util.List;
 
 @Component
-public class ExchangeRatesSmartBot {
+public class ExchangeRatesSmartBot extends TelegramLongPollingBot {
 
     private final BotProperties botProperties;
-    private final TelegramLongPollingBot telegramLongPollingBot;
-    private final TelegramBotsApi telegramBotsApi;
     private final KeyboardSelectBaseCurrency keyboardSelectBaseCurrency;
-    private final KeyboardSelectCompareCurrency keyboardSelectCompareCurrency;
     private final CompareCurrencyKeyboard compareCurrencyKeyboard;
     private UserCurrencyManager userCurrencyManager;
     private HoursKeyboard hoursKeyboard;
@@ -51,12 +46,11 @@ public class ExchangeRatesSmartBot {
 
 
     public ExchangeRatesSmartBot(BotProperties botProperties, KeyboardSelectBaseCurrency keyboardSelectBaseCurrency,
-                                 KeyboardSelectCompareCurrency keyboardSelectCompareCurrency, CompareCurrencyKeyboard compareCurrencyKeyboard,
+                                 CompareCurrencyKeyboard compareCurrencyKeyboard,
                                  UserCurrencyManager userCurrencyManager, HoursKeyboard hoursKeyboard, UserService userService, CheckArray checkArray, CurrencySetter currencySetter,
-                                 ReadTXT readTXT, RequestManager requestManager, ResponseBuilder responseBuilder, TimeChecker timeChecker) throws TelegramApiException {
+                                 ReadTXT readTXT, RequestManager requestManager, ResponseBuilder responseBuilder, TimeChecker timeChecker) {
         this.botProperties = botProperties;
         this.keyboardSelectBaseCurrency = keyboardSelectBaseCurrency;
-        this.keyboardSelectCompareCurrency = keyboardSelectCompareCurrency;
         this.compareCurrencyKeyboard = compareCurrencyKeyboard;
         this.userCurrencyManager = userCurrencyManager;
         this.hoursKeyboard = hoursKeyboard;
@@ -67,25 +61,20 @@ public class ExchangeRatesSmartBot {
         this.requestManager = requestManager;
         this.responseBuilder = responseBuilder;
         this.timeChecker = timeChecker;
-        this.telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-        this.telegramLongPollingBot = new MyBot(botProperties.bot().token());
-        this.telegramBotsApi.registerBot(telegramLongPollingBot);
     }
 
-    class MyBot extends TelegramLongPollingBot {
+    @Override
+    public String getBotToken() {
+        return botProperties.bot().token();
+    }
+    @Override
+    public String getBotUsername() {
+        return botProperties.bot().username();
+    }
+    @Override
+    public void onUpdateReceived(Update update) {
 
-        public MyBot(String botToken) {
-            super(botToken);
-        }
-
-        @Override
-        public String getBotUsername() {
-            return botProperties.bot().username();
-        }
-        @Override
-        public void onUpdateReceived(Update update) {
-
-            if (update.hasMessage()){
+        if (update.hasMessage()){
 
                 Message message = update.getMessage();
                 Long chatId = message.getChatId();
@@ -108,6 +97,9 @@ public class ExchangeRatesSmartBot {
                         sendTextAndReplyKeyboardMarkup(chatId, new ReadTXT().readTextFile(selectTimeText), hoursKeyboard.getKeyboard());
                     }
 
+                    if (HoursEnum.contains(message.getText())) {
+
+                    }
                 }
 
                 if (message.isCommand()) {
@@ -156,7 +148,6 @@ public class ExchangeRatesSmartBot {
                     currencySetter.setBaseCurrency(chatId, callBackData);
                     sendTextAndReplyKeyboardMarkup(chatId, readTXT.readTextFile(selectCompareCurrency), compareCurrencyKeyboard.getKeyboard());
                 }
-
             }
         }
 
@@ -203,21 +194,16 @@ public class ExchangeRatesSmartBot {
 
         @Scheduled(fixedDelay = 15000L)
         public void checkAndDistributionRates() {
-//            long currentTimeMillis = System.currentTimeMillis();
-//            List<Long> userIdList = timeChecker.checkTimeForAllUsers(new Time(currentTimeMillis));
-//            for (Long userId : userIdList) {
-//                OpenExchangeRatesResponse userRates = requestManager.getUserRates(userId);
-//                String userRatesMessageText = responseBuilder.build(userRates);
-//                sendTextMessage(userId, userRatesMessageText);
-//            }
+            long currentTimeMillis = System.currentTimeMillis();
+            List<Long> userIdList = timeChecker.checkTimeForAllUsers(new Time(currentTimeMillis));
+            for (Long userId : userIdList) {
+                OpenExchangeRatesResponse userRates = requestManager.getUserRates(userId);
+                String userRatesMessageText = responseBuilder.build(userRates);
+                sendTextMessage(userId, userRatesMessageText);
+            }
 
             sendTextMessage(1096873141L, String.valueOf(System.currentTimeMillis()));
         }
-    }
 
-    @Scheduled(cron = "0 * * * * *")
-    public void getTime() {
-        System.out.println(System.currentTimeMillis());
-    }
 
 }
