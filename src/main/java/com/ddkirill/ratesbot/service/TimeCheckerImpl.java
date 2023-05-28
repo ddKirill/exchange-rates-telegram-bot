@@ -3,7 +3,6 @@ package com.ddkirill.ratesbot.service;
 import com.ddkirill.ratesbot.entity.Users;
 import com.ddkirill.ratesbot.service.interfaces.TimeChecker;
 import com.ddkirill.ratesbot.service.interfaces.UserInfo;
-import com.ddkirill.ratesbot.telegrambot.ExchangeRatesSmartBot;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
@@ -20,13 +19,13 @@ public class TimeCheckerImpl implements TimeChecker {
     }
 
     @Override
-    public List<Long> checkTimeForAllUsers(Time currentTime) {
+    public List<Long> checkTimeForAllUsers(String currentTime) {
         List<Users> allUsersList = userInfo.getAllUsers();
         List<Long> userIdList = new ArrayList<>();
         for (Users user : allUsersList) {
-            Time notificationTime = user.getNotificationTime();
+            String notificationTime = user.getNotificationTime();
+            Long telegramId = user.getTelegramId();
             if (notificationTime.equals(currentTime)) {
-                Long telegramId = user.getTelegramId();
                 userIdList.add(telegramId);
             }
         }

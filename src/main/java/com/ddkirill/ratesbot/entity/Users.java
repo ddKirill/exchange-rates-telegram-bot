@@ -14,13 +14,13 @@ public class Users {
 
     @Id
     private Long telegramId;
-    private Time notificationTime;
+    private String notificationTime;
     private String baseCurrency;
     private List<String> comparedCurrency = new ArrayList<>();
     @Version
     private Integer version;
 
-    public Users(Long telegramId, Time notificationTime, String baseCurrency, List<String> comparedCurrency) {
+    public Users(Long telegramId, String notificationTime, String baseCurrency, List<String> comparedCurrency) {
         this.telegramId = telegramId;
         this.notificationTime = notificationTime;
         this.baseCurrency = baseCurrency;
@@ -38,11 +38,11 @@ public class Users {
         this.telegramId = telegramId;
     }
 
-    public Time getNotificationTime() {
+    public String getNotificationTime() {
         return notificationTime;
     }
 
-    public void setNotificationTime(Time notificationTime) {
+    public void setNotificationTime(String notificationTime) {
         this.notificationTime = notificationTime;
     }
 

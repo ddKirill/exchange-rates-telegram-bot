@@ -5,9 +5,6 @@ import com.ddkirill.ratesbot.repository.UsersRepository;
 import com.ddkirill.ratesbot.service.interfaces.UserInfo;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
-import java.text.SimpleDateFormat;
-
 @Service
 public class UserService {
 
@@ -29,5 +26,8 @@ public class UserService {
     }
 
     public void setNotificationTime(Long chatId, String notificationTime) {
+        Users user = userInfo.getUser(chatId);
+        user.setNotificationTime(notificationTime);
+        usersRepository.save(user);
     }
 }

@@ -12,9 +12,9 @@ import com.ddkirill.ratesbot.service.interfaces.TimeChecker;
 import com.ddkirill.ratesbot.telegrambot.keyboard.CompareCurrencyKeyboard;
 import com.ddkirill.ratesbot.telegrambot.keyboard.HoursKeyboard;
 import com.ddkirill.ratesbot.telegrambot.keyboard.KeyboardSelectBaseCurrency;
+import com.ddkirill.ratesbot.telegrambot.keyboard.MainMenuKeyboard;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -26,6 +26,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.sql.Time;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -43,12 +46,13 @@ public class ExchangeRatesSmartBot extends TelegramLongPollingBot {
     private RequestManager requestManager;
     private ResponseBuilder responseBuilder;
     private TimeChecker timeChecker;
+    private MainMenuKeyboard mainMenuKeyboard;
 
 
     public ExchangeRatesSmartBot(BotProperties botProperties, KeyboardSelectBaseCurrency keyboardSelectBaseCurrency,
                                  CompareCurrencyKeyboard compareCurrencyKeyboard,
                                  UserCurrencyManager userCurrencyManager, HoursKeyboard hoursKeyboard, UserService userService, CheckArray checkArray, CurrencySetter currencySetter,
-                                 ReadTXT readTXT, RequestManager requestManager, ResponseBuilder responseBuilder, TimeChecker timeChecker) {
+                                 ReadTXT readTXT, RequestManager requestManager, ResponseBuilder responseBuilder, TimeChecker timeChecker, MainMenuKeyboard mainMenuKeyboard) {
         this.botProperties = botProperties;
         this.keyboardSelectBaseCurrency = keyboardSelectBaseCurrency;
         this.compareCurrencyKeyboard = compareCurrencyKeyboard;
@@ -61,6 +65,7 @@ public class ExchangeRatesSmartBot extends TelegramLongPollingBot {
         this.requestManager = requestManager;
         this.responseBuilder = responseBuilder;
         this.timeChecker = timeChecker;
+        this.mainMenuKeyboard = mainMenuKeyboard;
     }
 
     @Override
@@ -85,6 +90,7 @@ public class ExchangeRatesSmartBot extends TelegramLongPollingBot {
                 String allCurrencyText = PathTextMessage.ALL_CURRENCIES_LIST.getPath();
                 String clearCompareCurrencyText = PathTextMessage.CLEAR_COMPARE_CURRENCY.getPath();
                 String arrowToDown = PathTextMessage.ARROW_TO_DOWN.getPath();
+                String completedSetting = PathTextMessage.COMPLETED_SETTING.getPath();
 
                 if (message.hasText()) {
 
@@ -98,7 +104,8 @@ public class ExchangeRatesSmartBot extends TelegramLongPollingBot {
                     }
 
                     if (HoursEnum.contains(message.getText())) {
-
+                        userService.setNotificationTime(chatId,message.getText());
+                        sendTextAndReplyKeyboardMarkup(chatId, readTXT.readTextFile(completedSetting), mainMenuKeyboard.getKeyboard());
                     }
                 }
 
@@ -192,18 +199,23 @@ public class ExchangeRatesSmartBot extends TelegramLongPollingBot {
             }
         }
 
-        @Scheduled(fixedDelay = 15000L)
+        @Scheduled(cron = "0 0 * * * *")
         public void checkAndDistributionRates() {
-            long currentTimeMillis = System.currentTimeMillis();
-            List<Long> userIdList = timeChecker.checkTimeForAllUsers(new Time(currentTimeMillis));
+
+            Date date = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
+            String timeToStringFormat = dateFormat.format(date);
+
+
+            List<Long> userIdList = timeChecker.checkTimeForAllUsers(timeToStringFormat);
+
             for (Long userId : userIdList) {
                 OpenExchangeRatesResponse userRates = requestManager.getUserRates(userId);
                 String userRatesMessageText = responseBuilder.build(userRates);
                 sendTextMessage(userId, userRatesMessageText);
+                System.out.println("Курсы отправлены пользователю!");
             }
-
-            sendTextMessage(1096873141L, String.valueOf(System.currentTimeMillis()));
-        }
+    }
 
 
 }

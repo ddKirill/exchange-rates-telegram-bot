@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface TimeChecker {
 
-    List<Long> checkTimeForAllUsers(Time currentTime);
+    List<Long> checkTimeForAllUsers(String currentTime);
 }
