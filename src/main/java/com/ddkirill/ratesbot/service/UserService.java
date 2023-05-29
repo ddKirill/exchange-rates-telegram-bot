@@ -30,4 +30,10 @@ public class UserService {
         user.setNotificationTime(notificationTime);
         usersRepository.save(user);
     }
+
+    public void deleteNotificationTime(Long chatId) {
+        Users user = userInfo.getUser(chatId);
+        user.setNotificationTime(null);
+    }
+
 }

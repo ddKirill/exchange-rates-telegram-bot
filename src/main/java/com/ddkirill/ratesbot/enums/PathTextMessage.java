@@ -10,7 +10,9 @@ public enum PathTextMessage {
     MAIN_MENU("src/main/resources/text-messages/menu.txt"),
     ALL_CURRENCIES_LIST("src/main/resources/text-messages/all_currencies_list.txt"),
     CLEAR_COMPARE_CURRENCY("src/main/resources/text-messages/clear_currency.txt"),
-    ARROW_TO_DOWN("src/main/resources/text-messages/arrow_to_down.txt");
+    ARROW_TO_DOWN("src/main/resources/text-messages/arrow_to_down.txt"),
+    IF_CURRENCIES_IS_PRESENT("src/main/resources/text-messages/if_currencies_is_present.txt"),
+    DELETE_NOTIFICATION_TIME("src/main/resources/text-messages/delete_notification_time.txt");
 
 
     private String path;

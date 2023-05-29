@@ -91,6 +91,8 @@ public class ExchangeRatesSmartBot extends TelegramLongPollingBot {
                 String clearCompareCurrencyText = PathTextMessage.CLEAR_COMPARE_CURRENCY.getPath();
                 String arrowToDown = PathTextMessage.ARROW_TO_DOWN.getPath();
                 String completedSetting = PathTextMessage.COMPLETED_SETTING.getPath();
+                String ifCurrenciesIsPresent = PathTextMessage.IF_CURRENCIES_IS_PRESENT.getPath();
+                String deleteNotificationTime = PathTextMessage.DELETE_NOTIFICATION_TIME.getPath();
 
                 if (message.hasText()) {
 
@@ -107,39 +109,60 @@ public class ExchangeRatesSmartBot extends TelegramLongPollingBot {
                         userService.setNotificationTime(chatId,message.getText());
                         sendTextAndReplyKeyboardMarkup(chatId, readTXT.readTextFile(completedSetting), mainMenuKeyboard.getKeyboard());
                     }
+
+                    if ("Главное меню".equals(message.getText())) {
+                        sendTextAndReplyKeyboardMarkup(chatId, readTXT.readTextFile(menuText),mainMenuKeyboard.getKeyboard());
+                    }
+
+
                 }
 
                 if (message.isCommand()) {
 
                     if ("/pick".equals(message.getText())) {
-                        userService.registerUser(chatId);
-                        sendTextMessageAndKeyboard(chatId, readTXT.readTextFile(startMessage),
-                                keyboardSelectBaseCurrency.getKeyboard());
+                        boolean checkUserCurrencies = userCurrencyManager.checkUserCurrencies(chatId);
+                        if (checkUserCurrencies) {
+                            sendTextAndReplyKeyboardMarkup(chatId, readTXT.readTextFile(ifCurrenciesIsPresent), mainMenuKeyboard.getKeyboard());
+                        } else {
+                            sendTextMessageAndKeyboard(chatId, readTXT.readTextFile(startMessage),
+                                    keyboardSelectBaseCurrency.getKeyboard());
+                        }
                     }
 
                     if ("/clear".equals(message.getText())) {
                         userCurrencyManager.deleteCompareCurrency(chatId);
                         userCurrencyManager.deleteBaseCurrency(chatId);
-                        sendTextMessage(chatId, readTXT.readTextFile(clearCompareCurrencyText));
+                        sendTextAndReplyKeyboardMarkup(chatId, readTXT.readTextFile(clearCompareCurrencyText), mainMenuKeyboard.getKeyboard());
+                    }
+
+                    if ("/clearTime".equals(message.getText())) {
+                        userService.deleteNotificationTime(chatId);
+                        sendTextAndReplyKeyboardMarkup(chatId, readTXT.readTextFile(deleteNotificationTime), mainMenuKeyboard.getKeyboard());
                     }
 
                     if ("/start".equals(message.getText())) {
+                        userService.registerUser(chatId);
                         sendTextMessage(chatId, readTXT.readTextFile(menuText));
                     }
 
                     if ("/myRates".equals(message.getText())) {
                         OpenExchangeRatesResponse userRates = requestManager.getUserRates(chatId);
-                        String response = responseBuilder.build(userRates);
-                        sendTextMessage(chatId, response);
+                        if (userRates!=null) {
+                            String response = responseBuilder.build(userRates);
+                            sendTextMessage(chatId, response);
+                        } else sendTextMessage(chatId, "Пока что, вы не имеете добавленных валют.");
                     }
 
                     if ("/currency".equals(message.getText())) {
-                        sendTextMessage(chatId, readTXT.readTextFile(allCurrencyText));
+                        sendTextAndReplyKeyboardMarkup(chatId, readTXT.readTextFile(allCurrencyText), mainMenuKeyboard.getKeyboard());
                     }
 
 
-                } else if (message.isUserMessage() && !CurrencyAliasAndTitle.contains(message.getText())) {
-                    sendTextMessage(chatId, readTXT.readTextFile(nonCommandMessage));
+
+
+
+//                } else if (message.isUserMessage() && !CurrencyAliasAndTitle.contains(message.getText())) {
+//                    sendTextMessage(chatId, readTXT.readTextFile(nonCommandMessage));
                 }
             }
 

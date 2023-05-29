@@ -21,8 +21,11 @@ public class RequestManager {
     public OpenExchangeRatesResponse getUserRates(Long chatId) {
         String baseCurrency = currencyGetter.getBaseCurrency(chatId);
         List<String> compareCurrency = currencyGetter.getCompareCurrency(chatId);
-        OpenExchangeRatesResponse openExchangeRatesResponse = openExchangeClient.requestFor3Currency(baseCurrency, compareCurrency);
-        return openExchangeRatesResponse;
+
+        if (baseCurrency != null && compareCurrency.size() > 0) {
+            OpenExchangeRatesResponse openExchangeRatesResponse = openExchangeClient.requestFor3Currency(baseCurrency, compareCurrency);
+            return openExchangeRatesResponse;
+        } else return null;
     }
 
 }

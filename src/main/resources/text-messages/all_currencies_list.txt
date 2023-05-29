@@ -1,0 +1,22 @@
+<b>Список валют:</b>
+
+<b>USD</b> -> USA Dollar
+<b>EUR</b> -> Euro
+<b>RUB</b> -> Russian Ruble
+<b>AED</b> -> United Arab Emirates Dirham
+<b>UZS</b> -> Uzbekistan Som
+<b>UAH</b> -> Ukrainian Hryvnia
+<b>TRY</b> -> Turkish Lira
+<b>TJS</b> -> Tajikistani Somoni
+<b>KZT</b> -> Kazakhstani Tenge
+<b>KRW</b> -> South Korean Won
+<b>JPY</b> -> Japanese Yen
+<b>INR</b> -> Indian Rupee
+<b>BTC</b> -> Bitcoin
+<b>AZN</b> -> Azerbaijani Manat
+<b>GEL</b> -> Georgian Lari
+<b>PLN</b> -> Polish Zloty
+<b>MXN</b> -> Mexican Peso
+<b>MNT</b> -> Mongolian Tugrik
+<b>COP</b> -> Columbian Peso
+<b>CAD</b> -> Canadian Dollar

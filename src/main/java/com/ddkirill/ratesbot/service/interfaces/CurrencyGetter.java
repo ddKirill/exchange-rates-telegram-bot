@@ -6,4 +6,5 @@ public interface CurrencyGetter {
 
     String getBaseCurrency(Long chatId);
     List<String> getCompareCurrency(Long chatId);
+    boolean checkUserCurrencies(Long chatId);
 }

@@ -5,7 +5,6 @@ import com.ddkirill.ratesbot.service.interfaces.TimeChecker;
 import com.ddkirill.ratesbot.service.interfaces.UserInfo;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 

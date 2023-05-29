@@ -63,14 +63,28 @@ public class UserCurrencyManager implements CurrencySetter, CurrencyGetter {
     @Override
     public String getBaseCurrency(Long chatId) {
         Users user = userInfo.getUser(chatId);
-        String baseCurrency = user.getBaseCurrency();
-        return baseCurrency;
+        if (user.getBaseCurrency() != null) {
+            String baseCurrency = user.getBaseCurrency();
+            return baseCurrency;
+        } else return null;
     }
 
     @Override
     public List<String> getCompareCurrency(Long chatId) {
         Users user = userInfo.getUser(chatId);
+        if (user.getComparedCurrency() != null) {
+            List<String> comparedCurrency = user.getComparedCurrency();
+            return comparedCurrency;
+        } else return null;
+    }
+
+    @Override
+    public boolean checkUserCurrencies(Long chatId) {
+        Users user = userInfo.getUser(chatId);
+        String baseCurrency = user.getBaseCurrency();
         List<String> comparedCurrency = user.getComparedCurrency();
-        return comparedCurrency;
+        if (baseCurrency==null && comparedCurrency.isEmpty()) {
+            return false;
+        } else return true;
     }
 }

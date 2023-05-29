@@ -11,7 +11,7 @@ public enum CurrencyAliasAndTitle {
     TRY("Turkish Lira"),
     TJS("Tajikistani Somoni"),
     KZT("Kazakhstani Tenge"),
-    KRW("Sous Korean Won"),
+    KRW("South Korean Won"),
     JPY("Japanese Yen"),
     INR("Indian Rupee"),
     BTC("BitCoin"),
