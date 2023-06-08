@@ -1,4 +1,4 @@
-![](image/photo_2023-06-04 10.03.02.jpeg)
+![](https://github.com/ddKirill/exchange-rates-telegram-bot/blob/dev/image/photo_2023-06-04%2010.03.02.jpeg)
 
 
 [Русский](README.md)
