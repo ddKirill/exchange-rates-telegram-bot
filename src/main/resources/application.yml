@@ -10,7 +10,7 @@ spring:
 open-exchange-rates:
   api:
     url: "https://openexchangerates.org/api/latest.json"
-    app-id: "f093d584ee8c4332a9ba2fc2539c1ed4"
+    app-id: ${APP_ID}
 
 telegram:
   bot:
