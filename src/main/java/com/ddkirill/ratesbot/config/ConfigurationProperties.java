@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @EnableScheduling
-@EnableConfigurationProperties(BotProperties.class)
+@EnableConfigurationProperties({BotProperties.class, RatesAPIProperties.class})
 public class ConfigurationProperties {
 
 }

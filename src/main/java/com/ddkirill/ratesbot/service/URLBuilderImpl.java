@@ -11,7 +11,7 @@ public class URLBuilderImpl implements URLBuilder {
 
     @Value("${open-exchange-rates.api.url}")
     private String openExchangeURL;
-    @Value("${open-exchange-rates.api.app-id}")
+    @Value("${open-exchange-rates.api.appid}")
     private String appId;
 
     public URLBuilderImpl() {

@@ -14,7 +14,7 @@ public class ResponseBuilder {
         List<String> parseResponseRates = parseResponseRates(openExchangeRatesResponse);
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<b>Ваши курсы:</b>");
+        stringBuilder.append("&#128202; <b>Ваши курсы:</b>");
         stringBuilder.append("\n");
         stringBuilder.append("\n");
         stringBuilder.append("1 " + openExchangeRatesResponse.getBase() + " = " + parseResponseRates.get(0));
