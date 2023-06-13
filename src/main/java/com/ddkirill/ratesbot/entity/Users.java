@@ -2,10 +2,9 @@ package com.ddkirill.ratesbot.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.sql.Array;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +18,15 @@ public class Users {
     private List<String> comparedCurrency = new ArrayList<>();
     @Version
     private Integer version;
+    @Column(value = "user_id")
+    private OldestRates oldestRates;
 
-    public Users(Long telegramId, String notificationTime, String baseCurrency, List<String> comparedCurrency) {
+    public Users(Long telegramId, String notificationTime, String baseCurrency, List<String> comparedCurrency, OldestRates oldestRates) {
         this.telegramId = telegramId;
         this.notificationTime = notificationTime;
         this.baseCurrency = baseCurrency;
         this.comparedCurrency = comparedCurrency;
+        this.oldestRates = oldestRates;
     }
 
     public Users() {
@@ -60,6 +62,14 @@ public class Users {
 
     public void setComparedCurrency(String currencyAlias) {
         comparedCurrency.add(currencyAlias);
+    }
+
+    public OldestRates getOldestRates() {
+        return oldestRates;
+    }
+
+    public void setOldestRates(OldestRates oldestRates) {
+        this.oldestRates = oldestRates;
     }
 
     @Override

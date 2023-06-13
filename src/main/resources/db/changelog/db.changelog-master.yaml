@@ -1,3 +1,6 @@
 databaseChangeLog:
   - include:
        file: db/changelog/migrations/1_db_schema.sql
+
+  - include:
+       file: db/changelog/migrations/2_oldest_rates_db_schema.sql

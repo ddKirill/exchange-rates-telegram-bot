@@ -8,6 +8,7 @@ import com.ddkirill.ratesbot.enums.PathTextMessage;
 import com.ddkirill.ratesbot.service.*;
 import com.ddkirill.ratesbot.service.interfaces.CheckArray;
 import com.ddkirill.ratesbot.service.interfaces.CurrencySetter;
+import com.ddkirill.ratesbot.service.interfaces.OldestRatesHandler;
 import com.ddkirill.ratesbot.service.interfaces.TimeChecker;
 import com.ddkirill.ratesbot.telegrambot.keyboard.CompareCurrencyKeyboard;
 import com.ddkirill.ratesbot.telegrambot.keyboard.HoursKeyboard;
@@ -25,8 +26,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.sql.Time;
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -51,8 +50,10 @@ public class ExchangeRatesSmartBot extends TelegramLongPollingBot {
 
     public ExchangeRatesSmartBot(BotProperties botProperties, KeyboardSelectBaseCurrency keyboardSelectBaseCurrency,
                                  CompareCurrencyKeyboard compareCurrencyKeyboard,
-                                 UserCurrencyManager userCurrencyManager, HoursKeyboard hoursKeyboard, UserService userService, CheckArray checkArray, CurrencySetter currencySetter,
-                                 ReadTXT readTXT, RequestManager requestManager, ResponseBuilder responseBuilder, TimeChecker timeChecker, MainMenuKeyboard mainMenuKeyboard) {
+                                 UserCurrencyManager userCurrencyManager, HoursKeyboard hoursKeyboard, UserService userService,
+                                 CheckArray checkArray, CurrencySetter currencySetter, ReadTXT readTXT,
+                                 RequestManager requestManager, ResponseBuilder responseBuilder, TimeChecker timeChecker,
+                                 MainMenuKeyboard mainMenuKeyboard) {
         this.botProperties = botProperties;
         this.keyboardSelectBaseCurrency = keyboardSelectBaseCurrency;
         this.compareCurrencyKeyboard = compareCurrencyKeyboard;
