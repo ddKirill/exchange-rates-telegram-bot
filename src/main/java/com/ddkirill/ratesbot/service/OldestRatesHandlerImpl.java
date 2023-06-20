@@ -14,8 +14,8 @@ import java.util.*;
 @Service
 public class OldestRatesHandlerImpl implements OldestRatesHandler {
 
-    private UserInfo userInfo;
-    private UsersRepository usersRepository;
+    private final UserInfo userInfo;
+    private final UsersRepository usersRepository;
 
     public OldestRatesHandlerImpl(UserInfo userInfo, UsersRepository usersRepository) {
         this.userInfo = userInfo;
@@ -26,13 +26,13 @@ public class OldestRatesHandlerImpl implements OldestRatesHandler {
     public void saveLatestCurrencyRate(OpenExchangeRatesResponse openExchangeRatesResponse, Long chatId) {
         Users user = userInfo.getUser(chatId);
         Map<String, Double> rates = openExchangeRatesResponse.getRates();
+        String baseCurrencyAlias = openExchangeRatesResponse.getBase();
         Set<String> aliasSet = rates.keySet();
         Collection<Double> ratesCollection = rates.values();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        OldestRates oldestRates = new OldestRates(aliasSet.stream().toList(), ratesCollection.stream().toList(), timestamp);
+        OldestRates oldestRates = new OldestRates(baseCurrencyAlias, aliasSet.stream().toList(), ratesCollection.stream().toList(), timestamp);
         user.setOldestRates(oldestRates);
         usersRepository.save(user);
     }
-
 
 }

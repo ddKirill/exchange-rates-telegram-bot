@@ -8,7 +8,6 @@ import com.ddkirill.ratesbot.enums.PathTextMessage;
 import com.ddkirill.ratesbot.service.*;
 import com.ddkirill.ratesbot.service.interfaces.CheckArray;
 import com.ddkirill.ratesbot.service.interfaces.CurrencySetter;
-import com.ddkirill.ratesbot.service.interfaces.OldestRatesHandler;
 import com.ddkirill.ratesbot.service.interfaces.TimeChecker;
 import com.ddkirill.ratesbot.telegrambot.keyboard.CompareCurrencyKeyboard;
 import com.ddkirill.ratesbot.telegrambot.keyboard.HoursKeyboard;

@@ -11,6 +11,8 @@ import java.util.Objects;
 @Table(value = "oldest_rates")
 public class OldestRates {
 
+    @Column(value = "base_currency_alias")
+    private String baseCurrencyAlias;
     @Column(value = "currency_alias")
     private List<String> currencyAlias = new ArrayList<>();
     @Column(value = "currency_rate")
@@ -18,10 +20,19 @@ public class OldestRates {
     @Column(value = "time_stamp")
     private Timestamp timestamp;
 
-    public OldestRates(List<String> currencyAlias, List<Double> currencyRates,Timestamp timestamp) {
+    public OldestRates(String baseCurrencyAlias, List<String> currencyAlias, List<Double> currencyRates,Timestamp timestamp) {
+        this.baseCurrencyAlias = baseCurrencyAlias;
         this.currencyAlias = currencyAlias;
         this.currencyRates = currencyRates;
         this.timestamp = timestamp;
+    }
+
+    public String getBaseCurrencyAlias() {
+        return baseCurrencyAlias;
+    }
+
+    public void setBaseCurrencyAlias(String baseCurrencyAlias) {
+        this.baseCurrencyAlias = baseCurrencyAlias;
     }
 
     public List<String> getCurrencyAlias() {
@@ -53,18 +64,20 @@ public class OldestRates {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OldestRates that = (OldestRates) o;
-        return Objects.equals(currencyAlias, that.currencyAlias) && Objects.equals(currencyRates, that.currencyRates) && Objects.equals(timestamp, that.timestamp);
+        return Objects.equals(baseCurrencyAlias, that.baseCurrencyAlias) && Objects.equals(currencyAlias, that.currencyAlias)
+                && Objects.equals(currencyRates, that.currencyRates) && Objects.equals(timestamp, that.timestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(currencyAlias, currencyRates, timestamp);
+        return Objects.hash(baseCurrencyAlias, currencyAlias, currencyRates, timestamp);
     }
 
     @Override
     public String toString() {
         return "OldestRates{" +
-                "currencyAlias=" + currencyAlias +
+                "baseCurrencyAlias='" + baseCurrencyAlias + '\'' +
+                ", currencyAlias=" + currencyAlias +
                 ", currencyRates=" + currencyRates +
                 ", timestamp=" + timestamp +
                 '}';
