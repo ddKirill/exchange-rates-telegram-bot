@@ -228,15 +228,13 @@ public class ExchangeRatesSmartBot extends TelegramLongPollingBot {
             Date date = new Date();
             SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
             String timeToStringFormat = dateFormat.format(date);
-
-
             List<Long> userIdList = timeChecker.checkTimeForAllUsers(timeToStringFormat);
 
             for (Long userId : userIdList) {
                 OpenExchangeRatesResponse userRates = requestManager.getUserRates(userId);
                 String userRatesMessageText = responseBuilder.build(userRates);
                 sendTextMessage(userId, userRatesMessageText);
-                System.out.println("Курсы отправлены пользователю!");
+                System.out.println("Курсы отправлены пользователям!");
             }
     }
 

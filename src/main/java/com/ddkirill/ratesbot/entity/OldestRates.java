@@ -13,7 +13,7 @@ public class OldestRates {
 
     @Column(value = "base_currency_alias")
     private String baseCurrencyAlias;
-    @Column(value = "currency_alias")
+    @Column(value = "compared_currency_alias")
     private List<String> currencyAlias = new ArrayList<>();
     @Column(value = "currency_rate")
     private List<Double> currencyRates = new ArrayList<>();
